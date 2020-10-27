@@ -1,8 +1,11 @@
 import numpy as np
-import cv2 
+import cv2
+import sys 
+import os
+from skimage.transform import resize
 
-def boxFilter(imagem):
-    # GUARDAR A LINHA COM BLURR JA CALCULADO
+def boxFilter(imagem, taxa):
+    # GUARDAR A COLUNA COM BLURR JA CALCULADO
     blurColum = []
     # blurr image
     blur_image = []
@@ -16,13 +19,13 @@ def boxFilter(imagem):
 
     while row < tamLinhas:
         while colum < tamColunas:
-            media = imagem[row:2+row, colum:2+colum]
+            media = imagem[row:taxa+row, colum:taxa+colum]
             newPixel = round(media.mean())
-            colum = colum + 2
+            colum = colum + taxa
             blurColum.append(newPixel)
         blur_image.append(blurColum)
         blurColum = []
-        row +=1
+        row +=taxa
         colum =0
 
     return np.array(blur_image, dtype=np.uint8)
@@ -31,15 +34,35 @@ def boxFilter(imagem):
 
 
 def main():
-    img1 = cv2.imread("cr7500x500.png", 0)
+    if (len(sys.argv)!=3): 
+        print("Error, Try like this: python boxfilter.py <nome_do_arquivo_de_imagem.png> <TAXA DE REDUÇÃO>")
+        sys.exit()
+
+    path ='./OUTPUT'
+    # Abrindo a imagem
+    nomeImagem = str(sys.argv[1])
+    taxa = int(sys.argv[2])
+    img1 = cv2.imread(nomeImagem, 0)
+    #Downsampling simples
+    downsampling = img1[::taxa,::taxa]
+    # box filter
+    filtrado = boxFilter(img1, taxa)
+
+    #Voltando ao tamanho normal BOX FILTER
+    upsamplingBOX = resize(filtrado, (img1.shape[0], img1.shape[1]))
+    # cv2.imshow('teste1 ', upsamplingBOX)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows() 
+    upsamplingBOX = cv2.convertScaleAbs(upsamplingBOX, alpha=(255.0))
+    cv2.imwrite(os.path.join(path ,'BOXFILTERED.png'), upsamplingBOX)
     
-
-    # pos box filter
-    filtrado = boxFilter(img1)
-
-    cv2.imshow('image1 - filtrada',filtrado)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    #Voltando ao tamanho normal downsampling
+    upsamplingDOWN = resize(downsampling, (img1.shape[0], img1.shape[1]))
+    # cv2.imshow('teste1 ',upsamplingDOWN)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows() 
+    upsamplingDOWN = cv2.convertScaleAbs(upsamplingDOWN, alpha=(255.0))
+    cv2.imwrite(os.path.join(path ,'DOWNSAMPLED.png'), upsamplingDOWN)
  
 if __name__ == "__main__":
     main()
