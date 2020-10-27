@@ -44,7 +44,7 @@ def main():
     taxa = int(sys.argv[2])
     img1 = cv2.imread(nomeImagem, 0)
     #Downsampling simples
-    downsampling = img1[::taxa,::taxa]
+    downsampling = img1[::int(taxa),::int(taxa)]
     # box filter
     filtrado = boxFilter(img1, taxa)
 
