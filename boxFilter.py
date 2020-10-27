@@ -50,19 +50,13 @@ def main():
 
     #Voltando ao tamanho normal BOX FILTER
     upsamplingBOX = resize(filtrado, (img1.shape[0], img1.shape[1]))
-    # cv2.imshow('teste1 ', upsamplingBOX)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows() 
     upsamplingBOX = cv2.convertScaleAbs(upsamplingBOX, alpha=(255.0))
-    cv2.imwrite(os.path.join(path ,'BOXFILTERED.png'), upsamplingBOX)
+    cv2.imwrite(os.path.join(path ,'BOXFILTERED'+str(taxa)+nomeImagem), upsamplingBOX)
     
     #Voltando ao tamanho normal downsampling
     upsamplingDOWN = resize(downsampling, (img1.shape[0], img1.shape[1]))
-    # cv2.imshow('teste1 ',upsamplingDOWN)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows() 
     upsamplingDOWN = cv2.convertScaleAbs(upsamplingDOWN, alpha=(255.0))
-    cv2.imwrite(os.path.join(path ,'DOWNSAMPLED.png'), upsamplingDOWN)
+    cv2.imwrite(os.path.join(path ,'DOWNSAMPLED'+str(taxa)+nomeImagem), upsamplingDOWN)
  
 if __name__ == "__main__":
     main()
