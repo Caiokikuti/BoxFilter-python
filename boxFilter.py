@@ -6,7 +6,7 @@ from skimage.transform import resize
 
 def boxFilter(imagem, taxa):
     # GUARDAR A COLUNA COM BLURR JA CALCULADO
-    blurColum = []
+    blurRow = []
     # blurr image
     blur_image = []
     # tamanho da linha  imagem
@@ -22,9 +22,9 @@ def boxFilter(imagem, taxa):
             media = imagem[row:taxa+row, colum:taxa+colum]
             newPixel = round(media.mean())
             colum = colum + taxa
-            blurColum.append(newPixel)
-        blur_image.append(blurColum)
-        blurColum = []
+            blurRow.append(newPixel)
+        blur_image.append(blurRow)
+        blurRow = []
         row +=taxa
         colum =0
 
@@ -37,8 +37,9 @@ def main():
     if (len(sys.argv)!=3): 
         print("Error, Try like this: python boxfilter.py <nome_do_arquivo_de_imagem.png> <TAXA DE REDUÇÃO>")
         sys.exit()
-
-    path ='./OUTPUT'
+    
+    # os.mkdir('./OUTPUT1')
+    path ='./'
     # Abrindo a imagem
     nomeImagem = str(sys.argv[1])
     taxa = int(sys.argv[2])
